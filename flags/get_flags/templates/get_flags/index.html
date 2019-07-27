@@ -1,0 +1,7 @@
+<form action={% url 'get_stuff:flags' %} method='post'>
+{% csrf_token %}
+{% for color in colors %}
+  <input type="checkbox" name="colors" value="{{color.id}}">{{color.name}}<br>
+{% endfor %}
+<button>Get Flags</button>
+</form>

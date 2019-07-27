@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <script>
+	  /*
+      let url = '{% url "get_stuff:fav_country" %}'
+      let data = {country: 'USA',}
+      let headers = {"X-CSRFToken": "{{csrf_token}}"}
+      axios.post(url, {'params': data}, {'headers': headers})
+      .then(function(response) {
+        console.log(response)
+      
+      })
+      */
+      axios({
+        method: "POST",
+        url: '{% url "get_stuff:fav_country" %}',
+        data: {
+          'country': 'USA',
+        },
+        headers: {"X-CSRFToken": "{{csrf_token}}"},
+      })
+      .then(function(response) {
+        console.log(response)
+	  
+      })
+    </script>
+  </body>
+</html>
+

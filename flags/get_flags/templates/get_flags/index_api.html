@@ -1,0 +1,49 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+{% for color in colors %}
+  <input class="colors_check" type="checkbox" name="colors" value="{{color.name}}">{{color.name}}<br>
+{% endfor %}
+<button id='get_flags'>Get Flags</button>
+<div id='country_text' style='height:50px'></div>
+
+<script>
+  get_flags = document.querySelector("#get_flags")
+  colors = document.querySelectorAll(".colors_check")
+  country_text = document.querySelector("#country_text")
+  get_flags.onclick = function() {
+	//url = "{{ url }}" + '?' + Array.from(colors, color => `colors=${color.value}`).join('&')
+ 	url = "{{ url }}?" + Array.from(colors, color => (color.checked) ? `colors=${color.value}`: "" ).join("&")
+	//url = "{{ url }}" + '?' + colors.map(color => `color=${color}`).join('&')
+	//console.log(Array.from(colors, color => `color=${color}`).join('&'))
+    axios.get(url)
+    .then(function(response) {
+	  console.log(response.data)
+	  for (let i=0; i<response.data.flags.length; i++) {
+		new_span = document.createElement('span')
+		new_span.innerText = response.data.flags[i]
+		country_text.appendChild(new_span)
+		new_btn = document.createElement('button')
+		new_btn.innerText = 'Save'
+		new_btn.onclick = function() {
+		  axios({
+			method: 'post',
+			url: '{% url "get_stuff:fav_country" %}',
+			data: {
+	         	country: response.data.flags[i],
+                        headers: {
+                          'X-CSRFToken': '{{ csrf_token }}'
+                        }
+		    },
+		  })
+		  .then(function (response) {
+		    console.log(response);
+		  })
+		}
+		country_text.appendChild(new_btn)
+		new_br = document.createElement('br')
+		country_text.appendChild(new_br)
+	  }
+	})
+  
+  
+  }
+</script>
